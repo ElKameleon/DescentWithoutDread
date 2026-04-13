@@ -26,8 +26,8 @@ Note: the centipede is a big part of the game's pacing and atmosphere. This mod 
    - **Steam:** found in `[Steam install location]\steamapps\common\IdolsOfAsh` — right-click the game in Steam, select **Manage → Browse Local Files** to open the folder directly
 2. Open GDRE Tools and select **PCK → Patch PCK archive**
 3. Select your `idols_of_ash.pck` as the target
-4. Click **Select Files** and add the 4 `.gdc` files from this mod
-5. Select all 4 files on the right panel and click **Map selected to Folder**
+4. Click **Select Files** and add the `.gdc` files from this mod
+5. Select all of the files on the right panel and click **Map selected to Folder**
 6. Navigate to and select the `scripts` folder inside your pck file list on the left
 7. Click **Patch** — GDRE will prompt you to save the output file. It defaults to `idols_of_ash_patched.pck` on your desktop. Save it wherever you like, then rename it to `idols_of_ash.pck` and place it in your game folder, replacing the original (which you already backed up in step 1)
 
