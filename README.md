@@ -3,7 +3,7 @@
 
 Removes the centipede from all modes, turning Idols of Ash into a pure exploration experience. Take your time. Nobody is chasing you.
 
-**Compatible with v1.15**
+**Compatible with v1.21**
 
 ---
 
