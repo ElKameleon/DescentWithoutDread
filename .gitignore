@@ -1,3 +1,17 @@
-# Godot 4+ specific ignores
-.godot/
-/android/
+# Ignore everything
+*
+
+# Un-ignore your mod files
+!scripts/waypoint_manager.gd
+!scripts/mod_loader.gd
+!scenes/waypoint_marker.tscn
+!Art/waypoint_marker.glb
+!Art/waypoint_marker.glb.import
+
+# Un-ignore project config
+!.gitignore
+!.gitattributes
+!.editorconfig
+!LICENSE
+!README.md
+!project.godot
