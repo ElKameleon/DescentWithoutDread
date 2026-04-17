@@ -1,0 +1,106 @@
+[gd_scene format=3 uid="uid://c6mmwlminfpv2"]
+
+[ext_resource type="PackedScene" uid="uid://bnb2teiotapk2" path="res://Art/waypoint_marker.glb" id="1_ov4de"]
+[ext_resource type="Texture2D" uid="uid://cgfqgmwwtkrft" path="res://textures/SmallBlurCircleGlowParticle.png" id="2_otagc"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ov4de"]
+transparency = 1
+albedo_color = Color(0, 0.4745098, 0.24313726, 0.49411765)
+emission_enabled = true
+emission = Color(0.3019608, 0.94509804, 0.5647059, 1)
+emission_energy_multiplier = 0.5
+proximity_fade_enabled = true
+proximity_fade_distance = 3.1
+distance_fade_min_distance = 0.5
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_g0nsx"]
+transparency = 1
+shading_mode = 0
+vertex_color_use_as_albedo = true
+albedo_texture = ExtResource("2_otagc")
+billboard_mode = 3
+billboard_keep_scale = true
+particles_anim_h_frames = 1
+particles_anim_v_frames = 1
+particles_anim_loop = false
+
+[sub_resource type="QuadMesh" id="QuadMesh_8oxi8"]
+
+[sub_resource type="Curve" id="Curve_qjjdk"]
+_data = [Vector2(0, 0), 0.0, 2.0059524, 0, 1, Vector2(0.4985163, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), -1.9940828, 0.0, 1, 0]
+point_count = 3
+
+[sub_resource type="Gradient" id="Gradient_xairb"]
+offsets = PackedFloat32Array(0, 0.54662377, 1)
+colors = PackedColorArray(1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0)
+
+[sub_resource type="Animation" id="Animation_otagc"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("marker:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 0, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_g0nsx"]
+resource_name = "bob"
+length = 3.0
+loop_mode = 2
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("marker:position")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 3),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector3(0, 0, 0), Vector3(0, 0.08, 0)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_8oxi8"]
+_data = {
+&"RESET": SubResource("Animation_otagc"),
+&"bob": SubResource("Animation_g0nsx")
+}
+
+[node name="waypoint_marker" unique_id=1467376419 instance=ExtResource("1_ov4de")]
+
+[node name="marker" parent="." index="0" unique_id=264362461]
+surface_material_override/0 = SubResource("StandardMaterial3D_ov4de")
+
+[node name="OmniLight3D" type="OmniLight3D" parent="." index="1" unique_id=2065445162]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.39633572, 0)
+light_color = Color(0.43137255, 1, 0.8784314, 1)
+light_energy = 0.15
+omni_range = 15.0
+
+[node name="Particles" type="CPUParticles3D" parent="." index="2" unique_id=1128592930]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.41567802, 0)
+material_override = SubResource("StandardMaterial3D_g0nsx")
+amount = 10
+lifetime = 4.0
+mesh = SubResource("QuadMesh_8oxi8")
+emission_shape = 1
+emission_sphere_radius = 2.0
+gravity = Vector3(0, 1, 0)
+initial_velocity_max = 1.0
+tangential_accel_min = -2.0
+tangential_accel_max = 2.0
+scale_amount_min = 0.01
+scale_amount_max = 0.03
+scale_amount_curve = SubResource("Curve_qjjdk")
+color = Color(0.37, 0.85300016, 1, 1)
+color_ramp = SubResource("Gradient_xairb")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." index="3" unique_id=20461264]
+libraries/ = SubResource("AnimationLibrary_8oxi8")
+autoplay = &"bob"
