@@ -1,12 +1,13 @@
 # Ignore everything
 *
 
-# Un-ignore your mod files
-!scripts/waypoint_manager.gd
+# Un-ignore mod loader bootstrap files
 !scripts/mod_loader.gd
-!scenes/waypoint_marker.tscn
-!Art/waypoint_marker.glb
-!Art/waypoint_marker.glb.import
+!project.godot
+
+# Un-ignore mods-unpacked folder and contents
+!mods-unpacked/
+!mods-unpacked/**
 
 # Un-ignore project config
 !.gitignore
@@ -14,4 +15,3 @@
 !.editorconfig
 !LICENSE
 !README.md
-!project.godot

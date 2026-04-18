@@ -4,12 +4,12 @@ importer="scene"
 importer_version=1
 type="PackedScene"
 uid="uid://qtrgmbnrsh4"
-path="res://.godot/imported/waypoint_marker.glb-b0c5a35077a545664802c5131f84d3bc.scn"
+path="res://.godot/imported/waypoint_marker.glb-4df179352da7db6962ff8c58595b691f.scn"
 
 [deps]
 
-source_file="res://Art/waypoint_marker.glb"
-dest_files=["res://.godot/imported/waypoint_marker.glb-b0c5a35077a545664802c5131f84d3bc.scn"]
+source_file="res://mods-unpacked/ElKameleon-DescentWithoutDread/Art/waypoint_marker.glb"
+dest_files=["res://.godot/imported/waypoint_marker.glb-4df179352da7db6962ff8c58595b691f.scn"]
 
 [params]
 

@@ -17,7 +17,7 @@ compatibility/default_parent_skeleton_in_mesh_instance_3d=true
 config/name="Idols of Ash"
 config/version="1.24"
 run/main_scene="uid://syd4oyyq4s5r"
-config/features=PackedStringArray("4.6", "Double Precision", "Forward Plus")
+config/features=PackedStringArray("4.6", "Forward Plus")
 run/max_fps=120
 config/icon="res://icon.svg"
 
@@ -28,6 +28,8 @@ general/3d_panning_strength=1.01
 
 [autoload]
 
+ModLoaderStore="*uid://b1okosx4p1jsf"
+ModLoader="*uid://bx0ec1vffwoqe"
 OnscreenMessage="*res://scripts/onscreen_messages.gd"
 Dialogic="*res://addons/dialogic/Core/DialogicGameHandler.gd"
 Game="*res://scripts/game.gd"
@@ -114,7 +116,7 @@ text_editor/behavior/indent/type=1
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/controller_icons/plugin.cfg", "res://addons/dialogic/plugin.cfg")
+enabled=PackedStringArray("res://addons/controller_icons/plugin.cfg", "res://addons/dialogic/plugin.cfg", "res://addons/mod_loader/_export_plugin/plugin.cfg")
 
 [importer_defaults]
 
@@ -266,6 +268,3 @@ global_illumination/sdfgi/frames_to_converge=0
 [steam]
 
 initialization/app_id=4450800
-initialization/initialize_on_startup=false
-initialization/embed_callbacks=false
-multiplayer_peer/max_channels=4
