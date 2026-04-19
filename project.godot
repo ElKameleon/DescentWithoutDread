@@ -118,6 +118,12 @@ text_editor/behavior/indent/type=1
 
 enabled=PackedStringArray("res://addons/controller_icons/plugin.cfg", "res://addons/dialogic/plugin.cfg", "res://addons/mod_loader/_export_plugin/plugin.cfg")
 
+[file_customization]
+
+folder_colors={
+"res://mods-unpacked/": "red"
+}
+
 [importer_defaults]
 
 texture={
