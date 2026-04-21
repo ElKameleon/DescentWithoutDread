@@ -1,43 +1,157 @@
 # Descent Without Dread
-### A Peaceful Mode Mod for Idols of Ash
 
-Removes the centipede from all modes, turning Idols of Ash into a pure exploration experience. Take your time. Nobody is chasing you.
+A quality-of-life mod for [Idols of Ash](https://store.steampowered.com/app/4450800/Idols_of_Ash/) by Leafy Games.
 
-**Compatible with v1.21**
+Adds peaceful mode, a waypoint system, and a First Kiln intro skip - focused on accessibility and exploration.
 
----
-
-## What it does
-Adds a Peaceful Mode toggle to the settings menu. When enabled, the centipede will not spawn in any mode. The rest of the game is unchanged.
-
-Note: the centipede is a big part of the game's pacing and atmosphere. This mod changes the experience significantly — consider playing through normally first.
+> **Compatibility:** built against Idols of Ash v1.24. If the game has updated since then, the PCK patch may need to be re-applied.
 
 ---
 
-## Requirements
-- A copy of Idols of Ash (itch.io or Steam)
-- [GDRE Tools](https://github.com/bruvzg/gdsdecomp/releases)
+## Features
+
+**Peaceful Mode**
+Toggle in Settings under Misc, disables centipedes and fall damage. Takes effect on next level load, and the checkbox is locked while in a level to prevent mid-run toggling issues.
+
+**Waypoints**
+Set up to 9 waypoints per level with Ctrl+1-9. Teleport to them with 1-9. Clear all waypoints for the current level with Ctrl+Backspace. Persists between sessions. Unlocks after completing a difficulty run on the current difficulty.
+
+**First Kiln Intro Skip**
+After watching the intro cinematic once, subsequent visits skip directly to the level.
+
+**Precision Hook**
+Right click while the hook is in flight to snap it in place. Caps the rope at its current length and kills forward momentum so you can land it exactly where you want. Restores normal rope behavior automatically when the hook attaches or is recalled.
 
 ---
 
-## Installation
-1. Back up your `idols_of_ash.pck` file
-   - **itch.io:** found in whatever folder you extracted the game to
-   - **Steam:** found in `[Steam install location]\steamapps\common\IdolsOfAsh` — right-click the game in Steam, select **Manage → Browse Local Files** to open the folder directly
-2. Open GDRE Tools and select **PCK → Patch PCK archive**
-3. Select your `idols_of_ash.pck` as the target
-4. Click **Select Files** and add the `.gdc` files from this mod
-5. Select all of the files on the right panel and click **Map selected to Folder**
-6. Navigate to and select the `scripts` folder inside your pck file list on the left
-7. Click **Patch** — GDRE will prompt you to save the output file. It defaults to `idols_of_ash_patched.pck` on your desktop. Save it wherever you like, then rename it to `idols_of_ash.pck` and place it in your game folder, replacing the original (which you already backed up in step 1)
+## TL;DR
+
+- Built with [GodotModLoader (GML) v7.0.1](https://github.com/GodotModding/godot-mod-loader)
+- Requires PCK patching via [GDRE Tools](https://github.com/bruvzg/gdsdecomp) since the game doesn't ship with mod support
+- Scripts must be exported as **text** (not compiled) for GML to load them
+- Dev environment uses [GodotSteam 4.18.1](https://codeberg.org/godotsteam/godotsteam/releases) (Godot 4.6.2 + Steamworks 1.64)
+- End users run `install.bat` - no manual setup required
 
 ---
 
-## Caveats
-- Requires a restart to take effect after toggling
-- If the game updates, the mod will need to be reapplied
+## Project Structure
+
+```
+mods-unpacked/ElKameleon-DescentWithoutDread/
+  mod_main.gd               Entry point, registers script extensions
+  manifest.json             GML mod manifest
+  Art/
+    waypoint_marker.glb     Plumbob waypoint marker mesh
+    waypoint_marker.glb.import
+  scenes/
+    waypoint_marker.tscn    Waypoint marker scene
+  scripts/
+    waypoint_manager.gd     Waypoint set/teleport/persist logic
+    peaceful_manager.gd     Centipede and fall damage suppression
+    settings_ui_ext.gd      Injects Peaceful Mode checkbox into Settings UI
+    precision_hook.gd       Precision hook mode on right click
+```
 
 ---
 
-## Uninstall
-Restore your backed up `idols_of_ash.pck` file.
+---
+
+> **Just here to play?** Everything below this point is for developers and modders. If you just want to install and play, grab the latest release and follow the instructions in `README.txt`.
+
+---
+
+## Dev Environment Setup
+
+### Requirements
+
+- [GodotSteam 4.18.1](https://codeberg.org/godotsteam/godotsteam/releases) (Godot 4.6.2 + Steamworks 1.64)
+- A copy of Idols of Ash (Steam)
+- [GDRE Tools v2.5-beta](https://github.com/bruvzg/gdsdecomp/releases) for PCK patching
+
+### Getting started
+
+> **Note:** This repo contains only the mod source files. It is not a standalone Godot project. To work on it you need a decompiled copy of Idols of Ash already set up as a Godot project. The mod files live inside that project under `mods-unpacked/`. Decompiling the game is outside the scope of this guide but GDRE Tools can do it.
+
+1. Clone this repo into your Idols of Ash Godot project under `mods-unpacked/`
+2. Open the project in GodotSteam
+3. Place GML v7.0.1 in `addons/mod_loader/`
+4. Place GDRE tools in `addons/mod_loader/vendor/GDRE/`
+5. Set up `override.cfg` in your Idols of Ash game folder (see below)
+
+### override.cfg
+
+Place this file in your Idols of Ash game folder alongside `idols_of_ash.exe`:
+
+```ini
+[autoload_prepend]
+ModLoader="*res://addons/mod_loader/mod_loader.gd"
+ModLoaderStore="*res://addons/mod_loader/mod_loader_store.gd"
+```
+
+Note: entries are listed in reverse order - `autoload_prepend` loads the last entry first.
+
+### Why PCK patching is required
+
+Idols of Ash does not ship with GML's autoloads or class registrations in its `project.binary`. GML requires its classes to be registered in the global script class cache before it can run. Since the game's shipped `project.binary` doesn't include these, it needs to be patched.
+
+The dev workflow patches the PCK using GDRE during install. For end users, the release package handles this automatically via `install.bat`.
+
+### Exporting the mod zip
+
+When exporting from GodotSteam for a release build:
+
+1. Go to Project > Export
+2. Under the **Scripts** tab, set export mode to **Text** (not Binary/Compiled)
+   - GML looks for `.gd` files - compiled `.gdc` files will not be found
+3. Export PCK/ZIP
+4. The resulting zip will contain `project.binary` and `.godot/global_script_class_cache.cfg`
+   - These are extracted by `install.bat` and patched into the user's vanilla PCK
+5. Manually zip the `ElKameleon-DescentWithoutDread/` mod folder separately
+   - Structure must have the mod folder at the root of the zip
+   - Place it in the `mods/` folder of the release package
+
+---
+
+## Release Package Structure
+
+The installer package users extract into their game folder:
+
+```
+DescentWithoutDread_v2.x/
+  install.bat
+  override.cfg
+  README.txt
+  addons/
+    JSON_Schema_Validator/
+    mod_loader/
+      vendor/
+        GDRE/
+  mods/
+    ElKameleon-DescentWithoutDread.zip
+```
+
+`install.bat` extracts `project.binary` and `global_script_class_cache.cfg` from the mod zip, backs up the vanilla PCK, patches both files in, and cleans up.
+
+---
+
+## Known Limitations
+
+- Peaceful mode changes require a level reload to take effect
+- If the game updates, the PCK patch needs to be re-applied
+- Waypoints are stored in `user://waypoints.cfg` and are not tied to save slots
+
+---
+
+## Dependencies
+
+| Dependency | License |
+|---|---|
+| [GodotModLoader v7.0.1](https://github.com/GodotModding/godot-mod-loader) | MIT |
+| [JSON Schema Validator](https://github.com/GodotModding/JSON-Shema-validator) | MIT |
+| [GDRE Tools v2.5-beta](https://github.com/bruvzg/gdsdecomp) | MIT |
+
+---
+
+## License
+
+MIT - see [LICENSE](LICENSE)
