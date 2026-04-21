@@ -49,16 +49,11 @@ func setupUI() -> void:
         peaceful_mode.focus_mode = Control.FOCUS_NONE if in_level else Control.FOCUS_ALL
 
 func _is_in_level() -> bool:
-    var scene = get_tree().current_scene
-    if scene == null:
-        return false
-    var path = scene.scene_file_path
-    return path.contains("FogLands") or path.contains("ViperPit") or path.contains("first_kiln_invert")
+    return Game.climber != null and is_instance_valid(Game.climber)
 
 func onUIChangedValue() -> void:
     if _is_in_level():
         peaceful_mode.set_pressed_no_signal(GameSettings.config.get_value("game", "peaceful_mode", false))
-        return
-
-    GameSettings.config.set_value("game", "peaceful_mode", peaceful_mode.button_pressed)
+    else:
+        GameSettings.config.set_value("game", "peaceful_mode", peaceful_mode.button_pressed)
     super()
