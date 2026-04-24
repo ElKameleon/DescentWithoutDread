@@ -1,6 +1,7 @@
 extends Node
 
 var _current_scene_path := ""
+var _last_climber_instance: Node = null
 var _fall_damage_disabled := false
 var _peaceful_was_active := false
 var _last_peaceful_state := false
@@ -10,8 +11,13 @@ func _process(_delta: float) -> void:
     if scene == null:
         return
     var path = scene.scene_file_path
-    if path != _current_scene_path:
+
+    var climber_changed = Game.climber != _last_climber_instance
+    var path_changed = path != _current_scene_path
+
+    if path_changed or climber_changed:
         _current_scene_path = path
+        _last_climber_instance = Game.climber
         _fall_damage_disabled = false
 
         if is_instance_valid(Game.climber):

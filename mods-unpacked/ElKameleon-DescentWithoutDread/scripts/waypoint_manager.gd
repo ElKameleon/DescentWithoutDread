@@ -10,13 +10,20 @@ var _current_scene_path: String = ""
 var menu_marker: Node3D = null
 const MENU_MARKER_POSITION := Vector3(86.12, 5.952, 51.66)
 
+# Constants for waypoint slot range and UI timing
+const WAYPOINT_SLOT_START := 1
+const WAYPOINT_SLOT_END_EXCLUSIVE := 10
+const WAYPOINT_DISPLAY_DURATION_MS := 3000
+const WAYPOINT_LERP_FACTOR := 3.3
+const WAYPOINT_GROUND_OFFSET := 0.78
+
 func _ready():
     set_process_unhandled_input(true)
     config = ConfigFile.new()
     config.load(WAYPOINTS_FILE_PATH)
     if not config.has_section_key("firstkiln", "has_seen_intro"):
         config.set_value("firstkiln", "has_seen_intro", false)
-    config.save(WAYPOINTS_FILE_PATH)
+        config.save(WAYPOINTS_FILE_PATH)
 
 func _process(delta: float) -> void:
     _process_waypoint_label(delta)
@@ -55,10 +62,10 @@ func _process(delta: float) -> void:
         spawn_existing_markers()
 
 func _unhandled_input(event: InputEvent) -> void:
-    if not is_instance_valid(Game.climber) or Game.climber.injured_state or not Game.climber.grapple_claw_is_enabled:
+    if not can_use_waypoint_actions():
         return
     if event is InputEventKey and event.pressed and not event.echo:
-        for i in range(1, 10):
+        for i in range(WAYPOINT_SLOT_START, WAYPOINT_SLOT_END_EXCLUSIVE):
             if event.keycode == KEY_1 + (i - 1):
                 if event.ctrl_pressed:
                     save_waypoint(i, Game.climber.global_position)
@@ -75,10 +82,17 @@ func get_scene_key() -> String:
     return get_tree().current_scene.scene_file_path.get_file().get_basename()
 
 func initialize_scene(scene_key: String) -> void:
-    for i in range(1, 10):
-        if not config.has_section_key(scene_key, str(i)):
-            config.set_value(scene_key, str(i), "")
-    config.save(WAYPOINTS_FILE_PATH)
+    # Intentionally no-op: missing waypoint slots are handled by get_value() defaults.
+    pass
+
+func can_use_waypoint_actions() -> bool:
+    if not is_instance_valid(Game.climber):
+        return false
+    if Game.climber.injured_state:
+        return false
+    if not Game.climber.grapple_claw_is_enabled:
+        return false
+    return is_unlocked()
 
 func is_unlocked() -> bool:
     var cleared = PlayerData.config.get_value("unlocked", "difficulty", 0)
@@ -115,45 +129,50 @@ func display_message(msg: String) -> void:
 
 func _process_waypoint_label(delta: float) -> void:
     if is_instance_valid(_waypoint_label):
-        if Time.get_ticks_msec() > _waypoint_label_last_ms + 3000:
-            _waypoint_label.modulate = lerp(_waypoint_label.modulate, Color.WHITE * 0.0, 3.3 * delta)
+        if Time.get_ticks_msec() > _waypoint_label_last_ms + WAYPOINT_DISPLAY_DURATION_MS:
+            _waypoint_label.modulate = lerp(_waypoint_label.modulate, Color.WHITE * 0.0, WAYPOINT_LERP_FACTOR * delta)
 
 func save_waypoint(slot: int, position: Vector3) -> void:
-    if not is_instance_valid(Game.climber):
-        return
-    if not is_unlocked():
+    if not can_use_waypoint_actions():
         display_message("Clear this difficulty to use waypoints!")
         return
     if not Game.climber.is_on_floor():
         display_message("Not on ground!")
         return
-    var ground_position = position - Vector3.UP * 0.78
+    var ground_position = position - Vector3.UP * WAYPOINT_GROUND_OFFSET
     config.set_value(get_scene_key(), str(slot), ground_position)
     config.save(WAYPOINTS_FILE_PATH)
     spawn_marker(slot, ground_position)
     display_message("Waypoint %d set!" % slot)
 
 func clear_waypoints() -> void:
-    if not is_instance_valid(Game.climber):
-        return
-    if not is_unlocked():
+    if not can_use_waypoint_actions():
         display_message("Clear this difficulty to use waypoints!")
         return
     var scene_key = get_scene_key()
-    for i in range(1, 10):
+    for i in range(WAYPOINT_SLOT_START, WAYPOINT_SLOT_END_EXCLUSIVE):
         config.set_value(scene_key, str(i), "")
     config.save(WAYPOINTS_FILE_PATH)
     clear_spawned_markers()
     display_message("All waypoints cleared!")
 
+func get_saved_waypoint(scene_key: String, slot: int) -> Variant:
+    var slot_key = str(slot)
+    if not config.has_section_key(scene_key, slot_key):
+        return null
+
+    var position = config.get_value(scene_key, slot_key)
+    if typeof(position) == TYPE_VECTOR3:
+        return position
+
+    return null
+
 func teleport_to_waypoint(slot: int) -> void:
-    if not is_instance_valid(Game.climber):
-        return
-    if not is_unlocked():
+    if not can_use_waypoint_actions():
         display_message("Clear this difficulty to use waypoints!")
         return
-    var position = config.get_value(get_scene_key(), str(slot), null)
-    if position == null or typeof(position) != TYPE_VECTOR3:
+    var position = get_saved_waypoint(get_scene_key(), slot)
+    if position == null:
         display_message("Waypoint %d not set!" % slot)
         return
     Game.climber.teleport_to_location(position)
@@ -176,9 +195,9 @@ func spawn_existing_markers() -> void:
     config.load(WAYPOINTS_FILE_PATH)
     clear_spawned_markers()
     var scene_key = get_scene_key()
-    for i in range(1, 10):
-        var position = config.get_value(scene_key, str(i), null)
-        if typeof(position) == TYPE_VECTOR3:
+    for i in range(WAYPOINT_SLOT_START, WAYPOINT_SLOT_END_EXCLUSIVE):
+        var position = get_saved_waypoint(scene_key, i)
+        if position != null:
             spawn_marker(i, position)
 
 func clear_spawned_markers() -> void:
