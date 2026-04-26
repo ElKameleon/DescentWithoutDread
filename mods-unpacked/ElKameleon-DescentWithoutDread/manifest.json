@@ -1,21 +1,32 @@
 {
-    "name": "DescentWithoutDread",
-    "namespace": "ElKameleon",
-    "version_number": "2.1.0",
-    "description": "Waypoint system for Idols of Ash. Set up to 9 waypoints per level, teleport back instantly, glowing markers show where they are.",
-    "website_url": "https://github.com/ElKameleon/DescentWithoutDread",
-    "dependencies": [],
-    "extra": {
-        "godot": {
-            "authors": ["ElKameleon"],
-            "tags": ["waypoints", "quality-of-life"],
-            "description_rich": "",
-            "optional_dependencies": [],
-            "load_before": [],
-            "incompatibilities": [],
-            "compatible_mod_loader_version": ["6.2.0"],
-            "compatible_game_version": ["1.24"],
-            "config_schema": {}
-        }
-    }
+	"dependencies": [],
+	"description": "Waypoint system for Idols of Ash. Set up to 9 waypoints per level, teleport back instantly, glowing markers show where they are.",
+	"extra": {
+		"godot": {
+			"authors": [
+				"ElKameleon"
+			],
+			"compatible_game_version": [
+				"1.30"
+			],
+			"compatible_mod_loader_version": [
+				"6.2.0"
+			],
+			"config_schema": {
+
+			},
+			"description_rich": "",
+			"incompatibilities": [],
+			"load_before": [],
+			"optional_dependencies": [],
+			"tags": [
+				"waypoints",
+				"quality-of-life"
+			]
+		}
+	},
+	"name": "DescentWithoutDread",
+	"namespace": "ElKameleon",
+	"version_number": "2.3.0",
+	"website_url": "https://github.com/ElKameleon/DescentWithoutDread"
 }

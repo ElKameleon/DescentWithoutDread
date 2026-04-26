@@ -15,7 +15,7 @@ const WAYPOINT_SLOT_START := 1
 const WAYPOINT_SLOT_END_EXCLUSIVE := 10
 const WAYPOINT_DISPLAY_DURATION_MS := 3000
 const WAYPOINT_LERP_FACTOR := 3.3
-const WAYPOINT_GROUND_OFFSET := 0.78
+const WAYPOINT_GROUND_OFFSET := 0.75
 
 func _ready():
     set_process_unhandled_input(true)
@@ -92,11 +92,7 @@ func can_use_waypoint_actions() -> bool:
         return false
     if not Game.climber.grapple_claw_is_enabled:
         return false
-    return is_unlocked()
-
-func is_unlocked() -> bool:
-    var cleared = PlayerData.config.get_value("unlocked", "difficulty", 0)
-    return cleared >= Game.difficulty + 1
+    return true
 
 var _waypoint_label: Label = null
 var _waypoint_label_last_ms: int = -9999
@@ -134,7 +130,6 @@ func _process_waypoint_label(delta: float) -> void:
 
 func save_waypoint(slot: int, position: Vector3) -> void:
     if not can_use_waypoint_actions():
-        display_message("Clear this difficulty to use waypoints!")
         return
     if not Game.climber.is_on_floor():
         display_message("Not on ground!")
@@ -147,7 +142,6 @@ func save_waypoint(slot: int, position: Vector3) -> void:
 
 func clear_waypoints() -> void:
     if not can_use_waypoint_actions():
-        display_message("Clear this difficulty to use waypoints!")
         return
     var scene_key = get_scene_key()
     for i in range(WAYPOINT_SLOT_START, WAYPOINT_SLOT_END_EXCLUSIVE):
@@ -169,13 +163,12 @@ func get_saved_waypoint(scene_key: String, slot: int) -> Variant:
 
 func teleport_to_waypoint(slot: int) -> void:
     if not can_use_waypoint_actions():
-        display_message("Clear this difficulty to use waypoints!")
         return
     var position = get_saved_waypoint(get_scene_key(), slot)
     if position == null:
         display_message("Waypoint %d not set!" % slot)
         return
-    Game.climber.teleport_to_location(position)
+    Game.climber.teleport_to_location(position + Vector3(0, 1, 0))
     Game.climber.AirVelocity = Vector3.ZERO
     Game.climber.velocity = Vector3.ZERO
     Game.climber.additional_velocity_next_frame = Vector3.ZERO
@@ -193,7 +186,12 @@ func spawn_marker(slot: int, position: Vector3) -> void:
 
 func spawn_existing_markers() -> void:
     config.load(WAYPOINTS_FILE_PATH)
-    clear_spawned_markers()
+
+    for marker in markers.values():
+        if is_instance_valid(marker):
+            marker.queue_free()
+    markers.clear()
+
     var scene_key = get_scene_key()
     for i in range(WAYPOINT_SLOT_START, WAYPOINT_SLOT_END_EXCLUSIVE):
         var position = get_saved_waypoint(scene_key, i)

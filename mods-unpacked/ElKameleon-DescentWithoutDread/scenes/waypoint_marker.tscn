@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://c6mmwlminfpv2"]
 
-[ext_resource type="PackedScene" uid="uid://qtrgmbnrsh4" path="res://Art/waypoint_marker.glb" id="1_ov4de"]
+[ext_resource type="PackedScene" uid="uid://qtrgmbnrsh4" path="res://mods-unpacked/ElKameleon-DescentWithoutDread/Art/waypoint_marker.glb" id="1_ov4de"]
 [ext_resource type="Texture2D" uid="uid://cgfqgmwwtkrft" path="res://textures/SmallBlurCircleGlowParticle.png" id="2_otagc"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ov4de"]
@@ -74,7 +74,7 @@ _data = {
 
 [node name="waypoint_marker" unique_id=1467376419 instance=ExtResource("1_ov4de")]
 
-[node name="marker" parent="." index="0" unique_id=1911138079]
+[node name="marker" parent="." index="0" unique_id=1327689539]
 surface_material_override/0 = SubResource("StandardMaterial3D_ov4de")
 
 [node name="OmniLight3D" type="OmniLight3D" parent="." index="1" unique_id=2065445162]

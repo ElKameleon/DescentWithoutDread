@@ -15,7 +15,7 @@ compatibility/default_parent_skeleton_in_mesh_instance_3d=true
 [application]
 
 config/name="Idols of Ash"
-config/version="1.24"
+config/version="1.30"
 run/main_scene="uid://syd4oyyq4s5r"
 config/features=PackedStringArray("4.6", "Forward Plus")
 run/max_fps=120
@@ -38,6 +38,8 @@ SceneLoader="*res://scripts/scene_loader.gd"
 ControllerIcons="*res://addons/controller_icons/ControllerIcons.gd"
 PlayerData="*uid://b0p7hwu3pawws"
 InputMappingSystem="*uid://cjyd5e8njohyk"
+SandboxDataManager="*res://scripts/sandbox_data_manager.gd"
+PlayerHistoryManager="*res://scripts/player_history_manager.gd"
 
 [debug]
 
@@ -104,6 +106,7 @@ window/size/viewport_width=640
 window/size/viewport_height=360
 window/size/mode=2
 window/stretch/mode="viewport"
+window/stretch/aspect="keep_height"
 window/vsync/vsync_mode=0
 
 [dotnet]
@@ -116,7 +119,7 @@ text_editor/behavior/indent/type=1
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/controller_icons/plugin.cfg", "res://addons/dialogic/plugin.cfg", "res://addons/mod_loader/_export_plugin/plugin.cfg")
+enabled=PackedStringArray("res://addons/controller_icons/plugin.cfg", "res://addons/dialogic/plugin.cfg", "res://addons/dwd_release/plugin.cfg", "res://addons/mod_loader/_export_plugin/plugin.cfg")
 
 [file_customization]
 
